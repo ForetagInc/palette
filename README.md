@@ -14,76 +14,7 @@ Deliver a consistent visual identity across your apps with design tokens, with y
 
 ## Usage
 
-```tsx
-import { createPaletteContext } from '@foretag/palette';
-import { FC } from 'react';
-
-// Themes
-const light = {
-	colors: {
-		primary: '#ffffff'
-	},
-	spacing: {
-		xs: '4',
-	}
-};
-
-const dark = {
-	colors: {
-		primary: '#000000'
-	},
-	// ... spacing
-};
-
-// Create a palette with the themes
-const palette = createPalette([
-	{
-		name: 'light',
-		tokens: {
-			...light
-		}
-	},
-	{
-		name: 'dark',
-		tokens: {
-			...dark
-		}
-	}
-]);
-
-// App.tsx
-const { PaletteProvider, usePalette } = createPaletteContext(palette);
-
-const App = () => (
-	<PaletteContext palette={palette} theme='light'>
-		<App />
-	</PaletteContext>
-);
-
-// Button.tsx
-interface IButtonProps {
-	disabled: boolean;
-}
-
-const Button: FC<IButtonProps> = (props) => {
-	const { mix } = usePalette();
-
-	const classes = mix<IButtonProps>((theme) => ({
-		base: 'bg:white f:blue',
-		variants: {
-			disabled: `bg:red f:${theme.colors.primary}`,
-		}
-	}));
-
-	return (
-		<button
-			className={classes(props)}
-		>
-			Button
-		</button>
-	);
-}
-```
+![TSX Example](./assets/preview.png)
 
 ## Tests
 
