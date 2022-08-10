@@ -1,0 +1,23 @@
+{
+	"compilerOptions": {
+		"jsx": "react",
+		"moduleResolution": "node",
+		"allowSyntheticDefaultImports": true,
+		"lib": [
+			"ESNext"
+		],
+		"target": "ESNext",
+		"baseUrl": ".",
+		"paths": {
+			"@/source": [
+				"source/index"
+			],
+			"@/source/*": [
+				"source/*"
+			],
+		},
+		"types": [
+			"bun-types"
+		],
+	}
+}
