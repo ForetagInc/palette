@@ -1,6 +1,10 @@
+/** A Palette for a Theme */
 export interface IPalette<Tokens, Assets> {
+	/** Name of the theme i.e. 'default' or 'christmas' */
 	name: string;
+	/** Design tokens of the theme - an object with your properties */
 	tokens?: Tokens;
+	/** Assets of the theme - an object with your assets i.e. logos */
 	assets?: Assets;
 };
 
