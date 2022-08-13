@@ -1,5 +1,9 @@
 {
-	"name": "@foretag/palette",
+	"name": "@design-language/palette",
+	"private": true,
+	"workspaces": [
+		"packages/*"
+	],
 	"version": "0.1.0",
 	"description": "",
 	"main": "source/index.ts",
