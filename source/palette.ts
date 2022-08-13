@@ -4,10 +4,9 @@ import type {
 	Tpalette,
 } from './types';
 
-export const createPalette = <T, A>(palette?: IPalette<T, A>[]): Tpalette<T, A> => {
+export const createPalette = <T, A>(palette?: IPalette<T, A>[], defaultTheme = 0): Tpalette<T, A> => {
 	const mix = <Props = null, Propless = null>(arg: TmixArgs<Props, Propless, T, A>) => {
-		// TODO: implement select theme based on React Context
-		const { base, variants, compounds } = arg instanceof Function ? arg(palette[0]) : arg;
+		const { base, variants, compounds } = arg instanceof Function ? arg(palette[defaultTheme]) : arg;
 
 		return (props?: Partial<Propless extends null ? Props : { [Key in keyof Propless]: Propless[Key] extends object ? keyof Propless[Key] : boolean }>) => {
 			const classes = base ? [...base.split(' ')] : [];
