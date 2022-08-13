@@ -23,7 +23,6 @@ export const createPaletteContext = <T, A>(palette?: Tpalette<T, A>) => {
 		let context = React.useContext(PaletteContext);
 
 		const { mix } = palette;
-		palette.palette;
 
 		const [theme, updateTheme] = useState(props.theme ?? context?.theme ?? palette[0].name);
 
