@@ -29,7 +29,7 @@ describe('React - JSX / TSX', () => {
 	const { PaletteProvider, usePalette } = createPaletteContext(palette);
 
 	const App = () => {
-		return <PaletteProvider theme='light' palette={palette}>
+		return <PaletteProvider theme='light'>
 			<p>Test</p>
 		</PaletteProvider>
 	}
