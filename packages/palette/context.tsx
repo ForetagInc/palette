@@ -10,7 +10,7 @@ interface IPaletteContext<T, A> {
 	setTheme: (theme: string) => void;
 };
 
-interface IPaletteProviderProps<T, A> {
+interface IPaletteProviderProps {
 	theme?: string;
 }
 
@@ -19,7 +19,7 @@ export const createPaletteContext = <T, A>(palette?: Tpalette<T, A>) => {
 
 	const usePalette = () => React.useContext(PaletteContext);
 
-	const PaletteProvider = ({ children, ...props }: PropsWithChildren<IPaletteProviderProps<T, A>>) => {
+	const PaletteProvider = ({ children, ...props }: PropsWithChildren<IPaletteProviderProps>) => {
 		let context = React.useContext(PaletteContext);
 
 		const { mix } = palette;

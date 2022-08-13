@@ -1,3 +1,4 @@
 {
-	"name": "@design-language/theme"
+	"name": "@design-language/theme",
+	"main": "index.ts"
 }
