@@ -1,4 +1,4 @@
-import React, { useState, PropsWithChildren } from 'react';
+import React, { FC, useState, PropsWithChildren } from 'react';
 import { IPalette, Tpalette, TmixFunction } from './types';
 
 interface IPaletteContext<T, A> {
@@ -21,7 +21,7 @@ export const createPaletteContext = <T, A>({ createMix }: Tpalette<T, A>) => {
 
 	const usePalette = () => React.useContext(PaletteContext);
 
-	const PaletteProvider = ({ children }: PropsWithChildren<IPaletteProviderProps>) => {
+	const PaletteProvider: FC<PropsWithChildren<IPaletteProviderProps>> = ({ children }) => {
 		let { theme, palette } = React.useContext(PaletteContext);
 
 		const [currentTheme, updateTheme] = useState(DEFAULT_THEME_INDEX);
