@@ -1,5 +1,3 @@
-use yew::AttrValue;
-
 #[derive(Clone, PartialEq, Eq)]
 pub struct Palette<T, A> {
 	pub default: Theme<T, A>,
@@ -38,8 +36,8 @@ impl<T, A> Theme<T, A> {
 
 #[derive(Default)]
 pub struct Token {
-	key: AttrValue,
-	value: AttrValue,
+	key: String,
+	value: String,
 }
 
 #[derive(Default)]
