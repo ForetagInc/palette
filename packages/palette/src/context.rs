@@ -15,6 +15,9 @@ pub fn PaletteProvider(props: &PaletteProviderProps) -> Html {
 			name: String::from("Default"),
 			tokens: Tokens {
 				colors: HashMap::from([("red", "#redcode"), ("yellow", "#redcode")]),
+				spacing: HashMap::new(),
+				breakpoints: HashMap::new(),
+				media_queries: HashMap::new(),
 			},
 			assets: Assets,
 		},
