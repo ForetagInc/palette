@@ -28,7 +28,7 @@ macro_rules! mix {
 		base: $base:expr,
 		variants: {
 			$(
-				$prop:ident : $value:expr $(,)?
+				$prop:ident : $value:literal $(=> ($($arg:tt)*))? $(,)?
 			)*
 		}
 	} => {
@@ -36,7 +36,7 @@ macro_rules! mix {
 			let mut variants = std::collections::HashMap::new();
 
 			$(
-				variants.insert(stringify!($prop), $value);
+				variants.insert(stringify!($prop), format!($value, $($($arg)*)?));
 			)*
 
 			Mix {
@@ -51,11 +51,16 @@ macro_rules! mix {
 pub fn Button(props: &ButtonProps) -> Html {
 	let theme = use_context::<Palette>().expect("No Palette context found");
 
-	let classes = theme.mix(props, |t, _| {
+	let classes = theme.mix(props, |tokens, _| {
 		mix! {
 			base: "bg:yellow",
 			variants: {
-				disabled: format!("bg:{} f:{}", t.color("yellow"), t.color("red")),
+				disabled: "bg:{} f:{} my:{}" => (
+					tokens.color("yellow"),
+					tokens.color("red"),
+					tokens.spacing("8")
+				),
+				bold: "f:bold"
 			}
 		}
 	});
