@@ -55,7 +55,7 @@ pub fn Button(props: &ButtonProps) -> Html {
 		mix! {
 			base: "bg:yellow",
 			variants: {
-				disabled: format!("bg:{} f:{}", t.colors.get("yellow").unwrap_or(&""), t.colors.get("red").unwrap_or(&"")),
+				disabled: format!("bg:{} f:{}", t.color("yellow"), t.color("red")),
 			}
 		}
 	});

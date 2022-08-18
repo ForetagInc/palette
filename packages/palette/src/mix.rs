@@ -11,5 +11,11 @@ pub struct Tokens {
 	pub colors: HashMap<&'static str, &'static str>,
 }
 
+impl Tokens {
+	pub fn color(&self, color: &str) -> &str {
+		self.colors.get(color).unwrap_or(&"")
+	}
+}
+
 #[derive(Properties, Clone, PartialEq, Eq)]
 pub struct Assets;
