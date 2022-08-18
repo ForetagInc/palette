@@ -12,7 +12,7 @@ pub struct PaletteProviderProps {
 pub fn PaletteProvider(props: &PaletteProviderProps) -> Html {
 	let theme = use_memo(
 		|_| Theme {
-			name: String::from("Default"),
+			name: "default",
 			tokens: Tokens {
 				colors: HashMap::from([("red", "#redcode"), ("yellow", "#redcode")]),
 				spacing: HashMap::new(),

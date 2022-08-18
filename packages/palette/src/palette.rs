@@ -30,7 +30,7 @@ where
 	T: Clone + PartialEq + 'static,
 	A: Clone + PartialEq + 'static,
 {
-	pub name: String,
+	pub name: &'static str,
 	pub tokens: T,
 	pub assets: A,
 }
@@ -40,7 +40,7 @@ where
 	T: Clone + PartialEq + 'static,
 	A: Clone + PartialEq + 'static,
 {
-	pub fn new(name: String, tokens: T, assets: A) -> Self {
+	pub fn new(name: &'static str, tokens: T, assets: A) -> Self {
 		Self {
 			name,
 			tokens,
@@ -73,5 +73,28 @@ where
 		}
 
 		Classes::from(classes)
+	}
+}
+
+#[cfg(test)]
+mod tests {
+	use std::collections::HashMap;
+
+	use crate::{Assets, Theme, Tokens};
+
+	#[test]
+	fn create_theme() {
+		let assets = Assets;
+
+		let tokens = Tokens {
+			colors: HashMap::new(),
+			spacing: HashMap::new(),
+			breakpoints: HashMap::new(),
+			media_queries: HashMap::new(),
+		};
+
+		let theme = Theme::new("default", tokens, assets);
+
+		assert_eq!(theme.name, "default")
 	}
 }
