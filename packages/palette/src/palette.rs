@@ -22,10 +22,6 @@ where
 			themes,
 		}
 	}
-
-	pub fn mix() -> String {
-		String::from("")
-	}
 }
 
 #[derive(Clone, PartialEq, Eq)]
