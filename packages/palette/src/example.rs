@@ -1,34 +1,14 @@
-use std::{collections::HashMap, rc::Rc};
 use yew::prelude::*;
 
-use crate::{Assets, Mix, Theme, Tokens};
+use crate::{context::PaletteProvider, Assets, Mix, Theme, Tokens};
 
 #[function_component]
 pub fn App() -> Html {
-	let theme = use_memo(
-		|_| Theme {
-			name: String::from("Default"),
-			tokens: Tokens {
-				colors: HashMap::from([("red", "#redcode"), ("yellow", "#redcode")]),
-			},
-			assets: Assets,
-		},
-		(),
-	);
-
-	fn get_html<T, A>(theme: Rc<Theme<T, A>>) -> Html
-	where
-		T: Clone + PartialEq + 'static,
-		A: Clone + PartialEq + 'static,
-	{
-		html! {
-			<ContextProvider<Rc<Theme<T, A>>> context={theme}>
-				<Button />
-			</ContextProvider<Rc<Theme<T, A>>>>
-		}
+	html! {
+		<PaletteProvider>
+			<Button disabled={true} />
+		</PaletteProvider>
 	}
-
-	get_html(theme)
 }
 
 #[derive(Properties, PartialEq, Eq)]
