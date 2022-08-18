@@ -6,7 +6,7 @@ pub struct Mix<'a> {
 	pub variants: Option<HashMap<&'a str, String>>,
 }
 
-#[derive(Default, Properties, Clone, PartialEq, Eq)]
+#[derive(Properties, Clone, PartialEq, Eq)]
 pub struct Tokens {
 	pub colors: HashMap<&'static str, &'static str>,
 	pub spacing: HashMap<&'static str, i32>,
