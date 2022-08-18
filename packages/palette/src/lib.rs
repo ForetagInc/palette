@@ -1,7 +1,10 @@
 mod example;
 
 pub mod palette;
-pub use palette::{Assets, Mix, Palette, Theme, Tokens};
+pub use palette::{Palette, Theme};
+
+pub mod mix;
+pub use mix::{Assets, Mix, Tokens};
 
 pub fn main() {
 	println!("test");
