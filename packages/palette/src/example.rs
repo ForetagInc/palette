@@ -1,6 +1,9 @@
 use yew::prelude::*;
 
-use crate::{context::PaletteProvider, Assets, Mix, Theme, Tokens};
+use crate::{
+	context::{Palette, PaletteProvider},
+	Mix,
+};
 
 #[function_component]
 pub fn App() -> Html {
@@ -46,7 +49,7 @@ macro_rules! mix {
 
 #[function_component]
 pub fn Button(props: &ButtonProps) -> Html {
-	let theme = use_context::<Theme<Tokens, Assets>>().expect("No Palette context found");
+	let theme = use_context::<Palette>().expect("No Palette context found");
 
 	let classes = theme.mix(props, |t, _| {
 		mix! {

@@ -35,3 +35,5 @@ pub fn PaletteProvider(props: &PaletteProviderProps) -> Html {
 
 	provide(theme, props)
 }
+
+pub type Palette = Theme<Tokens, Assets>;
