@@ -55,9 +55,22 @@ where
 		let theme = self.clone();
 		let mix = callback(theme.tokens, theme.assets);
 
-		let mut classes: Vec<&str> = vec![];
+		let mut classes: Vec<String> = Vec::new();
+
 		// Base
-		classes.append(&mut mix.base.split(' ').into_iter().collect::<Vec<&str>>());
+		classes.append(
+			&mut mix
+				.base
+				.split(' ')
+				.into_iter()
+				.map(|x| x.to_string())
+				.collect::<Vec<String>>(),
+		);
+
+		// Variants
+		for (k, v) in mix.variants.unwrap() {
+			classes.push(v);
+		}
 
 		Classes::from(classes)
 	}

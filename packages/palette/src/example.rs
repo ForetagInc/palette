@@ -1,4 +1,4 @@
-use std::rc::Rc;
+use std::{collections::HashMap, rc::Rc};
 use yew::prelude::*;
 
 use crate::{Assets, Mix, Theme, Tokens};
@@ -9,10 +9,7 @@ pub fn App() -> Html {
 		|_| Theme {
 			name: String::from("Default"),
 			tokens: Tokens {
-				colors: vec![("red", "#redcode"), ("yellow", "#redcode")]
-					.iter()
-					.copied()
-					.collect(),
+				colors: HashMap::from([("red", "#redcode"), ("yellow", "#redcode")]),
 			},
 			assets: Assets,
 		},
@@ -61,7 +58,7 @@ macro_rules! mix {
 
 			Mix {
 				base: stringify!($base),
-				variants
+				variants: Some(variants)
 			}
 		}
 	};

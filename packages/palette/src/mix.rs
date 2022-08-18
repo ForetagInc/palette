@@ -3,7 +3,7 @@ use yew::prelude::Properties;
 
 pub struct Mix<'a> {
 	pub base: &'a str,
-	pub variants: HashMap<&'a str, String>,
+	pub variants: Option<HashMap<&'a str, String>>,
 }
 
 #[derive(Properties, Clone, PartialEq, Eq)]
