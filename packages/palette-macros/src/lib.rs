@@ -1,10 +1,19 @@
-mod example;
+mod mix;
 
-pub mod palette;
-pub use palette::{Palette, Theme};
+use proc_macro::TokenStream;
+use quote::ToTokens;
+use syn::buffer::Cursor;
+use syn::parse_macro_input;
 
-pub mod mix;
-pub use mix::{Assets, Mix, Tokens};
+use mix::MixNode;
 
-pub mod context;
-pub mod macros;
+trait PeekValue<T> {
+	fn peek(cursor: Cursor) -> Option<T>;
+}
+
+#[proc_macro_error::proc_macro_error]
+#[proc_macro]
+pub fn mix(input: TokenStream) -> TokenStream {
+	let root = parse_macro_input!(input as MixNode);
+	TokenStream::from(root.into_token_stream())
+}

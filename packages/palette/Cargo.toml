@@ -4,7 +4,8 @@ version = '0.1.0'
 edition = '2021'
 
 [dependencies]
-yew = "0.19.3"
+yew = { git = "https://github.com/yewstack/yew/" }
+palette-macros = { path = "../palette-macros" }
 
 [dev-dependencies]
 cucumber = '0.13'

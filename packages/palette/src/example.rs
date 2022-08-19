@@ -1,3 +1,4 @@
+use palette_macros::mix;
 use yew::prelude::*;
 
 use crate::{
@@ -21,30 +22,6 @@ pub struct ButtonProps {
 
 	#[prop_or(false)]
 	bold: bool,
-}
-
-macro_rules! mix {
-	{
-		base: $base:expr,
-		variants: {
-			$(
-				$prop:ident : $value:literal $(=> ($($arg:tt)*))? $(,)?
-			)*
-		}
-	} => {
-		{
-			let mut variants = std::collections::HashMap::new();
-
-			$(
-				variants.insert(stringify!($prop), format!($value, $($($arg)*)?));
-			)*
-
-			Mix {
-				base: stringify!($base),
-				variants: Some(variants)
-			}
-		}
-	};
 }
 
 #[function_component]
