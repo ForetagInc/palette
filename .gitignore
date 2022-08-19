@@ -160,6 +160,9 @@ dist
 
 .vscode-test
 
+# JetBrains IDEs
+.idea
+
 # yarn v2
 
 .yarn/cache
