@@ -2,9 +2,11 @@ use boolinator::Boolinator;
 use quote::{quote, ToTokens};
 use syn::buffer::Cursor;
 use syn::parse::{Parse, ParseStream};
-use syn::{braced, Expr, Ident, Lit, LitStr, Token};
+use syn::{braced, Error, Expr, Ident, Lit, LitStr, Token};
 
+use proc_macro2::Span;
 use std::collections::HashMap;
+use syn::spanned::Spanned;
 
 use crate::PeekValue;
 
@@ -99,14 +101,29 @@ impl Parse for MixVariants {
 		let mut map = HashMap::new();
 
 		let content;
-		let brace = braced!(content in input);
+		let _ = braced!(content in input);
+
+		let mut keys = Vec::new();
 
 		while let ident = content.parse::<Ident>()? {
 			let _q: Token![:] = content.parse()?;
 
-			let val = content.parse()?;
+			let val = content.parse::<MixValue>()?;
+			let val_span = val.span();
+
+			let ident_str = ident.to_string();
+
+			(!keys.contains(&ident.to_string()))
+				.ok_or(Error::new(ident.span(), "Already declared variant"))?;
 
 			map.insert(ident, val);
+			keys.push(ident_str);
+
+			content
+				.cursor()
+				.ident()
+				.is_none()
+				.ok_or(Error::new(val_span, "Expected `,`"))?;
 
 			if content.parse::<Token![,]>().is_err() {
 				break;
@@ -149,6 +166,14 @@ pub type MixKey = Ident;
 pub enum MixValue {
 	Literal(LitStr),
 	// Format(MixFormat),
+}
+
+impl Spanned for MixValue {
+	fn span(&self) -> Span {
+		match self {
+			MixValue::Literal(l) => l.span(),
+		}
+	}
 }
 
 impl Parse for MixValue {
