@@ -13,11 +13,24 @@ pub struct MixNode {
 
 impl Parse for MixNode {
 	fn parse(input: ParseStream) -> syn::Result<Self> {
-		MixBase::peek(input.cursor()).ok_or_else(|| input.error("Missing base Mix property"))?;
+		let mut base: Option<MixBase> = None;
 
-		let base = input.parse()?;
+		while let Ok(el_type) = input.parse() {
+			match el_type {
+				MixElementType::Base => {
+					base.is_none()
+						.ok_or_else(|| input.error("Property `base` already assigned"))?;
 
-		Ok(MixNode { base })
+					base = Some(input.parse()?)
+				}
+			}
+
+			let _comma: Token![,] = input.parse()?;
+		}
+
+		Ok(MixNode {
+			base: base.ok_or_else(|| input.error("Property `base` needed to build Mix"))?,
+		})
 	}
 }
 
@@ -35,8 +48,8 @@ pub struct MixBase(LitStr);
 
 impl Parse for MixBase {
 	fn parse(input: ParseStream) -> syn::Result<Self> {
-		let ident: Ident = input.parse()?;
-		ident
+		input
+			.parse::<Ident>()?
 			.to_string()
 			.eq("base")
 			.ok_or_else(|| input.error("Expected base identifier"))?;
@@ -51,6 +64,23 @@ impl PeekValue<()> for MixBase {
 	fn peek(cursor: Cursor) -> Option<()> {
 		let (ident, _) = cursor.ident()?;
 		(ident == "base").as_option()
+	}
+}
+
+pub enum MixElementType {
+	Base,
+}
+
+impl Parse for MixElementType {
+	fn parse(input: ParseStream) -> syn::Result<Self> {
+		if MixBase::peek(input.cursor()).is_some() {
+			Ok(MixElementType::Base)
+		} else {
+			Err(input.error(format!(
+				"Unexpected token: `{}`",
+				input.parse::<Ident>()?.to_string()
+			)))
+		}
 	}
 }
 
