@@ -125,9 +125,11 @@ impl Parse for MixVariants {
 				.is_none()
 				.ok_or(Error::new(val_span, "Expected `,`"))?;
 
-			if content.parse::<Token![,]>().is_err() {
+			if content.cursor().eof() {
 				break;
 			}
+
+			content.parse::<Token![,]>()?;
 		}
 
 		Ok(Self(map))
