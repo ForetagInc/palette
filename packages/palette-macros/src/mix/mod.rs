@@ -4,8 +4,9 @@ use syn::buffer::Cursor;
 use syn::parse::{Parse, ParseStream};
 use syn::{braced, Error, Expr, Ident, Lit, LitStr, Token};
 
-use proc_macro2::Span;
+use proc_macro2::{Span, TokenStream};
 use std::collections::HashMap;
+use syn::__private::str;
 use syn::spanned::Spanned;
 
 use crate::PeekValue;
@@ -48,11 +49,34 @@ impl Parse for MixNode {
 }
 
 impl ToTokens for MixNode {
-	fn to_tokens(&self, tokens: &mut proc_macro2::TokenStream) {
+	fn to_tokens(&self, tokens: &mut TokenStream) {
 		let base = &self.base.0;
+		let variants = &self.variants;
+
+		let mut stream = TokenStream::new();
+
+		stream.extend(quote! {
+			let base = #base;
+			let mut variants = None;
+		});
+
+		if let Some(v) = variants {
+			stream.extend(quote! {
+				variants = Some(#v);
+			})
+		}
+
+		stream.extend(quote! {
+			Mix {
+				base,
+				variants
+			}
+		});
 
 		tokens.extend(quote! {
-			let ba3 = #base;
+			{
+				#stream
+			}
 		})
 	}
 }
@@ -143,6 +167,32 @@ impl PeekValue<()> for MixVariants {
 	}
 }
 
+impl ToTokens for MixVariants {
+	fn to_tokens(&self, tokens: &mut TokenStream) {
+		let mut stream = TokenStream::new();
+
+		stream.extend(quote! {
+			let mut variants = std::collections::HashMap::new();
+		});
+
+		for (k, v) in &self.0 {
+			stream.extend(quote! {
+				variants.insert(stringify!(#k), String::from(#v));
+			});
+		}
+
+		stream.extend(quote! {
+			variants
+		});
+
+		tokens.extend(quote! {
+			{
+				#stream
+			}
+		})
+	}
+}
+
 pub enum MixElementType {
 	Base,
 	Variants,
@@ -170,17 +220,17 @@ pub enum MixValue {
 	// Format(MixFormat),
 }
 
-impl Spanned for MixValue {
-	fn span(&self) -> Span {
-		match self {
-			MixValue::Literal(l) => l.span(),
-		}
-	}
-}
-
 impl Parse for MixValue {
 	fn parse(input: ParseStream) -> syn::Result<Self> {
 		Ok(Self::Literal(input.parse()?))
+	}
+}
+
+impl ToTokens for MixValue {
+	fn to_tokens(&self, tokens: &mut TokenStream) {
+		match self {
+			MixValue::Literal(l) => l.to_tokens(tokens),
+		}
 	}
 }
 
