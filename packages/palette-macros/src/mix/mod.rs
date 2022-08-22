@@ -1,12 +1,11 @@
 use boolinator::Boolinator;
+use proc_macro2::{Span, TokenStream};
 use quote::{quote, ToTokens};
 use syn::buffer::Cursor;
 use syn::parse::{Parse, ParseStream};
-use syn::{braced, Error, Expr, Ident, Lit, LitStr, Token};
+use syn::{braced, parenthesized, Error, Expr, Ident, LitStr, Token};
 
-use proc_macro2::{Span, TokenStream};
 use std::collections::HashMap;
-use syn::__private::str;
 use syn::spanned::Spanned;
 
 use crate::PeekValue;
@@ -143,12 +142,6 @@ impl Parse for MixVariants {
 			map.insert(ident, val);
 			keys.push(ident_str);
 
-			content
-				.cursor()
-				.ident()
-				.is_none()
-				.ok_or(Error::new(val_span, "Expected `,`"))?;
-
 			if content.cursor().eof() {
 				break;
 			}
@@ -177,7 +170,7 @@ impl ToTokens for MixVariants {
 
 		for (k, v) in &self.0 {
 			stream.extend(quote! {
-				variants.insert(stringify!(#k), String::from(#v));
+				variants.insert(stringify!(#k), #v);
 			});
 		}
 
@@ -217,29 +210,77 @@ pub type MixKey = Ident;
 
 pub enum MixValue {
 	Literal(LitStr),
-	// Format(MixFormat),
+	Format(MixFormat),
 }
 
 impl Parse for MixValue {
 	fn parse(input: ParseStream) -> syn::Result<Self> {
-		Ok(Self::Literal(input.parse()?))
+		input
+			.parse::<LitStr>()
+			.map(|s| Self::Literal(s))
+			.or(input.parse::<MixFormat>().map(|f| Self::Format(f)))
 	}
 }
 
 impl ToTokens for MixValue {
 	fn to_tokens(&self, tokens: &mut TokenStream) {
 		match self {
-			MixValue::Literal(l) => l.to_tokens(tokens),
+			MixValue::Literal(l) => tokens.extend(quote! {
+				String::from(#l)
+			}),
+			MixValue::Format(f) => f.to_tokens(tokens),
 		}
 	}
 }
 
 pub struct MixFormat {
 	pub lit: LitStr,
-	pub args: Vec<MixFormatArg>,
+	pub args: Vec<Expr>,
 }
 
-pub enum MixFormatArg {
-	Literal(LitStr),
-	Expression(Expr),
+impl Parse for MixFormat {
+	fn parse(input: ParseStream) -> syn::Result<Self> {
+		(input.parse::<Ident>()?.to_string() == "format")
+			.ok_or(input.error("`format` identifier expected"))?;
+
+		let _ex: Token![!] = input.parse()?;
+
+		input
+			.cursor()
+			.group(proc_macro2::Delimiter::Parenthesis)
+			.is_some()
+			.ok_or(input.error("Parenthesis expected"))?;
+
+		let content;
+		let _ = parenthesized!(content in input);
+
+		let lit = content.parse::<LitStr>()?;
+
+		let _c: Token![,] = content.parse()?;
+
+		let mut args = Vec::new();
+
+		while let expr = content.parse::<Expr>()? {
+			args.push(expr);
+
+			if content.cursor().eof() {
+				break;
+			}
+
+			content.parse::<Token![,]>()?;
+		}
+
+		Ok(Self { lit, args })
+	}
+}
+
+impl ToTokens for MixFormat {
+	fn to_tokens(&self, tokens: &mut TokenStream) {
+		let lit = &self.lit;
+		let args = &self.args;
+
+		tokens.extend(quote! {
+			format!(#lit, #(#args),*)
+		})
+	}
 }
