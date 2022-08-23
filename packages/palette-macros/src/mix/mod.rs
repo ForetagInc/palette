@@ -17,6 +17,10 @@ pub struct MixNode {
 
 impl Parse for MixNode {
 	fn parse(input: ParseStream) -> syn::Result<Self> {
+		let props = input.parse::<Ident>()?;
+
+		let _: Token![=>] = input.parse()?;
+
 		let mut base = None;
 		let mut variants = None;
 
@@ -33,7 +37,10 @@ impl Parse for MixNode {
 						.is_none()
 						.ok_or_else(|| input.error("Property `variants` already assigned"))?;
 
-					variants = Some(input.parse()?)
+					let mut v = input.parse::<MixVariants>()?;
+					v.props = Some(props.clone());
+
+					variants = Some(v)
 				}
 			}
 
@@ -103,7 +110,10 @@ impl PeekValue<()> for MixBase {
 	}
 }
 
-pub struct MixVariants(HashMap<MixKey, MixValue>);
+pub struct MixVariants {
+	props: Option<Ident>,
+	map: HashMap<MixKey, MixValue>,
+}
 
 impl Parse for MixVariants {
 	fn parse(input: ParseStream) -> syn::Result<Self> {
@@ -132,7 +142,6 @@ impl Parse for MixVariants {
 			let _q: Token![:] = content.parse()?;
 
 			let val = content.parse::<MixValue>()?;
-			let val_span = val.span();
 
 			let ident_str = ident.to_string();
 
@@ -149,7 +158,7 @@ impl Parse for MixVariants {
 			content.parse::<Token![,]>()?;
 		}
 
-		Ok(Self(map))
+		Ok(Self { props: None, map })
 	}
 }
 
@@ -168,10 +177,18 @@ impl ToTokens for MixVariants {
 			let mut variants = std::collections::HashMap::new();
 		});
 
-		for (k, v) in &self.0 {
-			stream.extend(quote! {
-				variants.insert(stringify!(#k), #v);
-			});
+		if let Some(props) = &self.props {
+			for (k, v) in &self.map {
+				// For type-checking whether the variant key is present on the component props struct
+				// We just add struct.{variant} so that it will throw a compiler error when it's not
+				// present on the struct.
+
+				stream.extend(quote! {
+					#props.#k;
+
+					variants.insert(stringify!(#k), #v);
+				});
+			}
 		}
 
 		stream.extend(quote! {
