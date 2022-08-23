@@ -227,7 +227,7 @@ pub type MixKey = Ident;
 
 pub enum MixValue {
 	Literal(LitStr),
-	Format(MixFormat),
+	Expression(Expr),
 }
 
 impl Parse for MixValue {
@@ -235,7 +235,7 @@ impl Parse for MixValue {
 		input
 			.parse::<LitStr>()
 			.map(|s| Self::Literal(s))
-			.or(input.parse::<MixFormat>().map(|f| Self::Format(f)))
+			.or(input.parse::<Expr>().map(|e| Self::Expression(e)))
 	}
 }
 
@@ -245,59 +245,7 @@ impl ToTokens for MixValue {
 			MixValue::Literal(l) => tokens.extend(quote! {
 				String::from(#l)
 			}),
-			MixValue::Format(f) => f.to_tokens(tokens),
+			MixValue::Expression(f) => f.to_tokens(tokens),
 		}
-	}
-}
-
-pub struct MixFormat {
-	pub lit: LitStr,
-	pub args: Vec<Expr>,
-}
-
-impl Parse for MixFormat {
-	fn parse(input: ParseStream) -> syn::Result<Self> {
-		(input.parse::<Ident>()?.to_string() == "format")
-			.ok_or(input.error("`format` identifier expected"))?;
-
-		let _ex: Token![!] = input.parse()?;
-
-		input
-			.cursor()
-			.group(proc_macro2::Delimiter::Parenthesis)
-			.is_some()
-			.ok_or(input.error("Parenthesis expected"))?;
-
-		let content;
-		let _ = parenthesized!(content in input);
-
-		let lit = content.parse::<LitStr>()?;
-
-		let _c: Token![,] = content.parse()?;
-
-		let mut args = Vec::new();
-
-		while let expr = content.parse::<Expr>()? {
-			args.push(expr);
-
-			if content.cursor().eof() {
-				break;
-			}
-
-			content.parse::<Token![,]>()?;
-		}
-
-		Ok(Self { lit, args })
-	}
-}
-
-impl ToTokens for MixFormat {
-	fn to_tokens(&self, tokens: &mut TokenStream) {
-		let lit = &self.lit;
-		let args = &self.args;
-
-		tokens.extend(quote! {
-			format!(#lit, #(#args),*)
-		})
 	}
 }
