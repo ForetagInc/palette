@@ -772,7 +772,19 @@ name = "palette"
 version = "0.1.0"
 dependencies = [
  "cucumber",
+ "palette-macros",
  "yew",
+]
+
+[[package]]
+name = "palette-macros"
+version = "0.1.0"
+dependencies = [
+ "boolinator",
+ "proc-macro-error",
+ "proc-macro2",
+ "quote",
+ "syn",
 ]
 
 [[package]]
