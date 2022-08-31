@@ -1,8 +1,8 @@
 import React, { FC, useState, PropsWithChildren } from 'react';
-import { IPalette, Tpalette, TmixFunction } from './types';
+import { ITheme, Tpalette, TmixFunction } from './types';
 
 interface IPaletteContext<Tokens, Assets, Themes> {
-	palette?: IPalette<Tokens, Assets>[];
+	palette?: ITheme<Tokens, Assets>[];
 	mix?: TmixFunction<Tokens, Assets, Themes>;
 	theme?: number;
 

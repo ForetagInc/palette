@@ -1,10 +1,10 @@
 import type {
-	IPalette,
+	ITheme,
 	TmixArgs,
 	Tpalette,
 } from './types';
 
-export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens, Assets>[]): Tpalette<Tokens, Assets, Themes> => {
+export const createPalette = <Tokens, Assets, Themes>(palette?: ITheme<Tokens, Assets>[]): Tpalette<Tokens, Assets, Themes> => {
 	const createMix = (themeIndex = 0) => {
 		return <Props = null, Propless = null>(arg: TmixArgs<Props, Propless, Tokens, Assets, Themes>) => {
 			const { base, themes, variants, compounds } = arg(palette[themeIndex]);
@@ -19,7 +19,8 @@ export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens,
 
 					if (variants) {
 						let variantKeys = Object.keys(props);
-						for (let i = 0; i < variantKeys.length; i++) {
+						let variantsLength = variantKeys.length;
+						for (let i = 0; i < variantsLength; i++) {
 							const [key, value] = [variantKeys[i], props[variantKeys[i]]];
 							const vari: unknown = variants as unknown;
 
@@ -31,8 +32,10 @@ export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens,
 						};
 					}
 
-					if (compounds)
-						for (let i = 0; i < compounds.length; i++) {
+					if (compounds) {
+						const compoundsLength = compounds.length;
+
+						for (let i = 0; i < compoundsLength; i++) {
 							const entries = Object.entries(compounds[i][0]);
 							let matches = 0;
 
@@ -44,6 +47,7 @@ export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens,
 								classes.push(...compounds[i][1].split(' '));
 							}
 						}
+					}
 				}
 
 				return classes.join(' ').trim();

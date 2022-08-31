@@ -1,5 +1,5 @@
 /** A Palette for a Theme */
-export interface IPalette<Tokens, Assets> {
+export interface ITheme<Tokens, Assets> {
 	/** Name of the theme i.e. 'default' or 'christmas' */
 	name: string;
 	/** Design tokens of the theme - an object with your properties */
@@ -15,12 +15,12 @@ export interface IParameters<Props, Propless, Themes> {
 	readonly compounds?: Array<[Partial<Propless extends null ? Props : { [Key in keyof Propless]: Propless[Key] extends object ? keyof Propless[Key] : boolean }>, string]>,
 };
 
-export type TmixArgs<Props, Propless, Tokens, Assets, Themes> = ((theme?: IPalette<Tokens, Assets>) => IParameters<Props, Propless, Themes>);
+export type TmixArgs<Props, Propless, Tokens, Assets, Themes> = ((theme?: ITheme<Tokens, Assets>) => IParameters<Props, Propless, Themes>);
 
 export type TmixFunction<Tokens, Assets, Themes> = <Props = null, Propless = null>(arg: TmixArgs<Props, Propless, Tokens, Assets, Themes>) => (props?: Partial<Propless extends null ? Props : { [Key in keyof Propless]: Propless[Key] extends object ? keyof Propless[Key] : boolean; }>) => string;
 
 export type Tpalette<Tokens, Assets, Themes> = {
 	createMix: (themeIndex?: number) => TmixFunction<Tokens, Assets, Themes>;
 
-	palette: IPalette<Tokens, Assets>[]
+	palette: ITheme<Tokens, Assets>[]
 };
