@@ -1,22 +1,25 @@
 {
-	"name": "@design-language/palette",
+	"name": "palette",
 	"private": true,
+	"version": "0.1.0",
+	"scripts": {
+		"build": "npm run build --workspaces --if-present"
+	},
 	"workspaces": [
 		"packages/*"
 	],
-	"version": "0.1.0",
-	"description": "",
-	"main": "source/index.ts",
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"author": "Foretag Inc.",
+	"license": "MPL2.0",
 	"dependencies": {
 		"jest": "^28.1.3",
 		"react": "18.2.0"
 	},
 	"devDependencies": {
-		"bun-types": "^0.1.0",
+		"@swc/cli": "^0.1.57",
+		"@swc/core": "^1.2.245",
+		"@types/jest": "^28.1.7",
 		"@types/react": "^18.0.17",
-		"@types/jest": "^28.1.7"
+		"bun-types": "^0.1.0",
+		"typescript": "^4.8.2"
 	}
 }

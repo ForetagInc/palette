@@ -1,4 +1,17 @@
 {
-	"name": "@design-language/theme",
-	"main": "index.ts"
+	"name": "@design-language/palette",
+	"main": "source/index.js",
+	"version": "0.1.0",
+	"description": "Design token framework — adopt a unified design language across platforms, codebases, and teams",
+	"keywords": [
+		"palette",
+		"foretag",
+		"design",
+		"system",
+		"language",
+		"react"
+	],
+	"scripts": {
+		"build": "npx swc ./source -d dist --config-file ../../.swcrc"
+	}
 }
