@@ -7,7 +7,7 @@ import type {
 export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens, Assets>[]): Tpalette<Tokens, Assets, Themes> => {
 	const createMix = (themeIndex = 0) => {
 		return <Props = null, Propless = null>(arg: TmixArgs<Props, Propless, Tokens, Assets, Themes>) => {
-			const { base, themes, variants, compounds } = arg instanceof Function ? arg(palette[themeIndex]) : arg;
+			const { base, themes, variants, compounds } = arg(palette[themeIndex]);
 
 			return (props?: Partial<Propless extends null ? Props : { [Key in keyof Propless]: Propless[Key] extends object ? keyof Propless[Key] : boolean }>) => {
 				const classes = base ? [...base.split(' ')] : [];
@@ -49,7 +49,6 @@ export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens,
 				return classes.join(' ').trim();
 			}
 		};
-
 	}
 
 	return {
