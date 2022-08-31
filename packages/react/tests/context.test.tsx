@@ -40,6 +40,9 @@ describe('React - JSX / TSX', () => {
 
 			const classes = mix<IButtonProps>(({ tokens }) => ({
 				base: 'bg:white f:blue',
+				themes: {
+
+				},
 				variants: {
 					disabled: `bg:red f:${tokens.colors.primary}`,
 				}

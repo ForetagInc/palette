@@ -4,15 +4,19 @@ import type {
 	Tpalette,
 } from './types';
 
-export const createPalette = <T, A>(palette?: IPalette<T, A>[]): Tpalette<T, A> => {
+export const createPalette = <Tokens, Assets, Themes>(palette?: IPalette<Tokens, Assets>[]): Tpalette<Tokens, Assets, Themes> => {
 	const createMix = (themeIndex = 0) => {
-		return <Props = null, Propless = null>(arg: TmixArgs<Props, Propless, T, A>) => {
-			const { base, variants, compounds } = arg instanceof Function ? arg(palette[themeIndex]) : arg;
+		return <Props = null, Propless = null>(arg: TmixArgs<Props, Propless, Tokens, Assets, Themes>) => {
+			const { base, themes, variants, compounds } = arg instanceof Function ? arg(palette[themeIndex]) : arg;
 
 			return (props?: Partial<Propless extends null ? Props : { [Key in keyof Propless]: Propless[Key] extends object ? keyof Propless[Key] : boolean }>) => {
 				const classes = base ? [...base.split(' ')] : [];
 
 				if (props) {
+					if (themes) {
+						// .. TODO implement themes
+					}
+
 					if (variants) {
 						let variantKeys = Object.keys(props);
 						for (let i = 0; i < variantKeys.length; i++) {

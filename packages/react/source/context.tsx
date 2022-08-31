@@ -1,9 +1,9 @@
 import React, { FC, useState, PropsWithChildren } from 'react';
 import { IPalette, Tpalette, TmixFunction } from './types';
 
-interface IPaletteContext<T, A> {
-	palette?: IPalette<T, A>[];
-	mix?: TmixFunction<T, A>;
+interface IPaletteContext<Tokens, Assets, Themes> {
+	palette?: IPalette<Tokens, Assets>[];
+	mix?: TmixFunction<Tokens, Assets, Themes>;
 	theme?: number;
 
 	/** Actions */
@@ -16,8 +16,8 @@ interface IPaletteProviderProps {
 
 const DEFAULT_THEME_INDEX = 0;
 
-export const createPaletteContext = <T, A>({ createMix }: Tpalette<T, A>) => {
-	const PaletteContext = React.createContext<IPaletteContext<T, A>>(null);
+export const createPaletteContext = <Tokens, Assets, Themes>({ createMix }: Tpalette<Tokens, Assets, Themes>) => {
+	const PaletteContext = React.createContext<IPaletteContext<Tokens, Assets, Themes>>(null);
 
 	const usePalette = () => React.useContext(PaletteContext);
 
