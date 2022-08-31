@@ -1,9 +1,9 @@
 import React, { FC, useState, PropsWithChildren } from 'react';
 import { ITheme, Tpalette, TmixFunction } from './types';
 
-interface IPaletteContext<Tokens, Assets, Themes> {
+interface IPaletteContext<Tokens, Assets> {
 	palette?: ITheme<Tokens, Assets>[];
-	mix?: TmixFunction<Tokens, Assets, Themes>;
+	mix?: TmixFunction<Tokens, Assets>;
 	theme?: number;
 
 	/** Actions */
@@ -16,8 +16,8 @@ interface IPaletteProviderProps {
 
 const DEFAULT_THEME_INDEX = 0;
 
-export const createPaletteContext = <Tokens, Assets, Themes>({ createMix }: Tpalette<Tokens, Assets, Themes>) => {
-	const PaletteContext = React.createContext<IPaletteContext<Tokens, Assets, Themes>>(null);
+export const createPaletteContext = <Tokens, Assets>({ createMix, ...creation }: Tpalette<Tokens, Assets>) => {
+	const PaletteContext = React.createContext<IPaletteContext<Tokens, Assets>>(null);
 
 	const usePalette = () => React.useContext(PaletteContext);
 
@@ -26,7 +26,7 @@ export const createPaletteContext = <Tokens, Assets, Themes>({ createMix }: Tpal
 
 		const [currentTheme, updateTheme] = useState(DEFAULT_THEME_INDEX);
 
-		const setTheme = (newTheme: string) => {
+		const setTheme = (newTheme: typeof creation.palette[number]['name']) => {
 			palette.map(({ name }, i) => {
 				if (name === newTheme) {
 					updateTheme(i);
