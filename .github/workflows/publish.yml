@@ -3,6 +3,22 @@ on:
         types: [published]
 
 jobs:
+    publish-normalize:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v3
+            - uses: actions/setup-node@v3
+              with:
+                  node-version: "latest"
+                  registry-url: "https://registry.npmjs.org"
+            - run: |
+                  npm ci
+            - run: |
+                  cd packages/normalize.css
+                  npm publish
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
     build:
         runs-on: ubuntu-latest
         steps:
@@ -12,8 +28,7 @@ jobs:
                   node-version: "latest"
                   registry-url: "https://registry.npmjs.org"
             - run: |
-                  npm install
-                  npm run test
+                  npm ci
                   npm run build
 
             - run: npm publish

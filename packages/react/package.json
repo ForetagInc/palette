@@ -1,7 +1,7 @@
 {
 	"name": "@design-language/palette",
 	"main": "source/index.js",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Design token framework — adopt a unified design language across platforms, codebases, and teams",
 	"keywords": [
 		"palette",

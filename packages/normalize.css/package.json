@@ -1,6 +1,6 @@
 {
 	"name": "@design-language/normalize.css",
-	"version": "0.1.0",
+	"version": "0.1.1",
 	"description": "Normalize browser's styles. ~1KB",
 	"author": "Foretag Inc.",
 	"license": "MPL2.0",
