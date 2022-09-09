@@ -1,0 +1,13 @@
+{
+	"name": "@design-language/palette",
+	"version": "0.1.0",
+	"main": "source/index.ts",
+	"author": {
+		"email": "oss@engineering.foret.ag",
+		"url": "https://engineering.foret.ag",
+		"name": "Foretag Inc."
+	},
+	"dependencies": {
+		"@master/css": "^1.36.0"
+	}
+}
